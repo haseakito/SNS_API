@@ -69,7 +69,7 @@ jobs:
             
             # Step-7 
             - name: Add API files to Zip file
-              run: cd ./api && zip -g ../api.zip -r
+              run: cd ./api && zip -g ../api.zip -r .
 
             # Step-8 Upload Zip file
             # uploads artifacts from my workflow to enable sharing data between jobs
