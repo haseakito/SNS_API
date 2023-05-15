@@ -45,11 +45,16 @@ jobs:
                 key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements.txt') }}
 
                 # An ordered list of keys to use for restoring the cache if no cache hit occurred for key
-                restore-keys: /${{ runner.os }}-venv-
+                restore-keys: ${{ runner.os }}-venv-
             
             # Step-4 Build a Virtual ENV, but only if it doesn't already exist
             - name: Activate Virtual ENV
-              run: python -m venv venv && source venv/bin/activate && pip3 install -r requirements.tsx
+              run: python -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt
+              if: steps.cache-venv.outputs.cache_hit != 'true'
+            
+            # Install all dependencies  
+            - name: Install dependencies
+              run: pip3 install -r requirements.txt  
 
             # Step-5 Running Tests
             - name: Run Tests
