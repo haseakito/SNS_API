@@ -60,7 +60,7 @@ jobs:
             # Step-5 Running Tests
             - name: Run Tests
               # Note that you have to activate the virtualenv in every step because Github actions doesn't preserve the environment
-              run: . venv/bin/activate && pytest
+              run: . venv/bin/activate && pytest --doctest-modules --junitxml=junit/test-results-python3.8.xml
             
 
             # Step-6 Upload Test Results
