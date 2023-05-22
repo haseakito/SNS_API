@@ -19,9 +19,11 @@ jobs:
         runs-on: ubuntu-latest
         
         # steps: defines a series of tasks executed by the Job
+        # In CI, follow steps below to integrate codes 
         steps:
             # Check out repository so our workflow can access it
-            - uses: actions/checkout@v2
+            - name: Checkout
+              uses: actions/checkout@v2
 
             # Step-1 Set up Python using actions/setup-python@v2 Github action
             - name: Set up Python 3.8
@@ -73,3 +75,34 @@ jobs:
                 path: junit/test-results-python3.8.xml
             # Use always() to always run this step to publish test results when there are test failures
               if: ${{ always() }}
+
+    CD:
+        # runs-on: defines the workflow runner
+        runs-on: ubuntu-latest
+
+        # steps: defines a series of tasks executed by the Job
+        steps:
+            # Check out repository so our workflow can access it
+            - name: Checkout
+              uses: actions/checkout@v2
+            
+            - name: Configure AWS Credentials
+              uses: aws-actions/configure-aws-credentials@v2
+              with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: ap-northeast-1
+            
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v1
+
+            - name: Build, Tag, and Push the Docker Image to Amazon ECR
+              id: build-image
+              env:
+                ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+                ECR_REPOSITORY: sns_api
+                IMAGE_TAG: latest
+              run: |
+                docker build -t ECR_REPOSITORY/ECR_REPOSITORY:$IMAGE_TAG .
+                docker push ECR_REPOSITORY/ECR_REPOSITORY:$IMAGE_TAG
