@@ -4,13 +4,13 @@ FROM python:3.8
 WORKDIR /app
 
 # Copy the dependencies
-COPY ./requirements.tsx ./requirements.tsx
+COPY ./requirements.tsx /requirements.tsx
 
 # Install the dependencies
-RUN pip install --no-cache-dir --upgrade -r ./requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /requirements.txt
 
 # Copy the source codes
-COPY ./app ./
+COPY ./app /
 
 # Run the server
 CMD [ "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80" ]
