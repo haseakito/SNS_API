@@ -4,7 +4,7 @@ FROM python:3.8
 WORKDIR /app
 
 # Copy the dependencies
-COPY ./requirements.tsx /app/requirements.tsx
+COPY ./requirements.txt /app/requirements.txt
 
 # Install the dependencies
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
