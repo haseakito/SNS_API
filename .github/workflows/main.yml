@@ -104,5 +104,5 @@ jobs:
                 ECR_REPOSITORY: sns_api
                 IMAGE_TAG: latest
               run: |
-                docker build -t ECR_REPOSITORY/ECR_REPOSITORY:$IMAGE_TAG .
-                docker push ECR_REPOSITORY/ECR_REPOSITORY:$IMAGE_TAG
+                docker build -t $ECR_REPOSITORY/$ECR_REPOSITORY:$IMAGE_TAG .
+                docker push $ECR_REPOSITORY/$ECR_REPOSITORY:$IMAGE_TAG
