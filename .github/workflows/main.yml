@@ -49,33 +49,27 @@ jobs:
             
             # Step-4 Build a Virtual ENV, but only if it doesn't already exist
             - name: Activate Virtual ENV
-              run: python -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt
-              if: steps.cache-venv.outputs.cache_hit != 'true'
+              run: python -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt              
             
             # Install all dependencies  
             - name: Install dependencies
-              run: pip3 install -r requirements.txt  
+              run: |
+                python -m pip install --upgrade pip
+                pip install -r requirements.txt  
 
             # Step-5 Running Tests
             - name: Run Tests
               # Note that you have to activate the virtualenv in every step because Github actions doesn't preserve the environment
               run: . venv/bin/activate && pytest
             
-            # Step-6 
-            - name: Create archive of dependencies
-              run: |
-                    cd ./venv/lib/python3.8/site-packages
-                    zip -r9 ../../../../api.zip .
-            
-            # Step-7 
-            - name: Add API files to Zip file
-              run: cd ./api && zip -g ../api.zip -r .
 
-            # Step-8 Upload Zip file
+            # Step-6 Upload Test Results
             # uploads artifacts from my workflow to enable sharing data between jobs
             # Stores data once a workflow is complete
-            - name: Upload zip file
+            - name: Upload Test Results
               uses: actions/upload-artifact@v2
               with:
-                name: api
-                path: api.zip
+                name: pytest-results-python3.8
+                path: junit/test-results-python3.8.xml
+            # Use always() to always run this step to publish test results when there are test failures
+              if: ${{ always() }}
